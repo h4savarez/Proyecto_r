@@ -1,0 +1,110 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+1. Conociendo los datos
+```{r}
+library (nycflights13)
+library(gapminder)
+library(tidyverse)
+library(ggplot2)
+
+
+yearly <- read.csv("deaths_handwashing.csv")
+view(yearly)
+yearly
+```
+
+2. El alarmante número de muertes
+
+```{r}
+yearly_prop <- yearly %>%
+mutate(proportion_deaths= deaths/births)
+yearly_prop
+ 
+```
+3. Muerte en las clínicas
+```{r}
+proportion_deaths_year  <- yearly_prop %>%
+select(year, clinic, proportion_deaths)
+
+ggplot(proportion_deaths_year, aes(x = proportion_deaths, y = year, color=clinic)) +
+  geom_line()
+
+
+```
+4. Comienza el lavado de manos
+
+```{r}
+ monthly <- read.csv("deaths_clinic_1.csv")%>%
+
+mutate(proportion_death = deaths/births)
+
+monthly
+
+```
+4.3. Imprima las primeras filas de monthly usando la función head().
+
+```{r}
+
+head(monthly)
+
+```
+5.El efecto del lavado de manos
+
+```{r}
+
+ggplot(monthly, aes(x=proportion_death, y=date, colors= births)) +
+geom_line()
+
+```
+```{r}
+ggplot(monthly, aes(x=proportion_death, y= date)) +
+  geom_line() +
+   labs(title = "Efecto de lavado de manos con relacion a muertes") +
+   labs(x = "Proporcion de Muertes/nacimientos ", y = "Años")
+
+
+```
+
+6.Los resultados del lavado de manos
+A partir del año 1847 la proporción de muertes se reduce drásticamente y, sí, fue entonces
+cuando se hizo obligatorio el lavado de manos.
+
+```{r}
+monthly <- monthly%>%
+mutate(handwasing_started = ( date >= 1847))
+monthly
+```
+
+
+dejo geom_point ya que con geom_line no se observa la grafica 
+```{r}
+
+monthly
+ggplot(monthly, aes(x=log10(proportion_death) , y= ( (date)), color=handwasing_started)) +
+  geom_point()+
+   labs(title = "Efecto de lavado de manos con relacion a muertes") +
+   labs(x = "Proporcion de Muertes/nacimientos ", y = "fecha")
+
+```
+7. ¿Más lavado de manos, menos muertes?
+```{r}
+
+monthly %>%
+   group_by(handwasing_started) %>%
+   summarize(mean_proportion_death = mean(proportion_death))
+
+```
+
+
+
+```{r}
+
+month_summary <- monthly %>%
+   group_by(handwasing_started) %>%
+   summarize(mean_proportion_death = mean(proportion_death))
+
+month_summary
+```
+se observa disminucion de 0.1 a 0.03 es significativo el labado de manos 
