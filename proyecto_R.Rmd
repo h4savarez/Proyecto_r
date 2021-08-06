@@ -54,13 +54,13 @@ head(monthly)
 
 ```{r}
 
-ggplot(monthly, aes(x=date, y=proportion_death, colors= births)) +
-geom_line()
+ggplot(monthly, aes(x=date, y=proportion_death, colors= births, group=1 )) +
+geom_line(color=1,size=0.2)
 
 ```
 ```{r}
-ggplot(monthly, aes(x=date, y= proportion_death)) +
-  geom_line() +
+ggplot(monthly, aes(x=date, y= proportion_death, group=1 )) +
+  geom_line(  ) +
    labs(title = "Efecto de lavado de manos con relacion a muertes") +
    labs(x = "Proporcion de Muertes/nacimientos ", y = "Años")
 
@@ -82,8 +82,8 @@ dejo geom_point ya que con geom_line no se observa la grafica
 ```{r}
 
 monthly
-ggplot(monthly, aes(x=date , y= log10(proportion_death), color=handwasing_started)) +
-  geom_point()+
+ggplot(monthly, aes(x=date , y= (proportion_death), color=handwasing_started,group=1 )) +
+  geom_line()+
    labs(title = "Efecto de lavado de manos con relacion a muertes") +
    labs(x = "Proporcion de Muertes/nacimientos ", y = "fecha")
 
